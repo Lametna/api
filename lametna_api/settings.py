@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'channels',
     'users',
     'party',
+    'apps.games',
+    'apps.analytics',
 ]
 
 MIDDLEWARE = [
