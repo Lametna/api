@@ -11,6 +11,15 @@ from .charades.plugin import CharadesPlugin
 from .password.plugin import PasswordPlugin
 from .taboo.plugin import TabooPlugin
 
+# Wave 3
+from .mafia.plugin import MafiaPlugin
+from .werewolf.plugin import WerewolfPlugin
+from .memory_match.plugin import MemoryMatchPlugin
+from .spot_the_difference.plugin import SpotTheDifferencePlugin
+from .word_chain.plugin import WordChainPlugin
+from .hangman.plugin import HangmanPlugin
+from .categories.plugin import CategoriesPlugin
+
 AVAILABLE_PLUGINS = [
     NumberGuessingPlugin,
     SpyPlugin,
@@ -20,5 +29,12 @@ AVAILABLE_PLUGINS = [
     DrawAndGuessPlugin,
     CharadesPlugin,
     PasswordPlugin,
-    TabooPlugin
+    TabooPlugin,
+    MafiaPlugin,
+    WerewolfPlugin,
+    MemoryMatchPlugin,
+    SpotTheDifferencePlugin,
+    WordChainPlugin,
+    HangmanPlugin,
+    CategoriesPlugin
 ]
