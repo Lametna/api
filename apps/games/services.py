@@ -155,3 +155,56 @@ class ScoringService:
         ScoreRepository.update_score(match, player, points)
         EventDispatcher.publish(ScoreUpdatedEvent(match_id=str(match.id), player_id=player_id, new_score=points))
         return True, "Score updated."
+
+class DictionaryService:
+    @staticmethod
+    def get_weighted_random_word(packs: Optional[List[str]] = None, categories: Optional[List[str]] = None) -> Optional['SecretWord']:
+        from .models import SecretWord
+        from django.db.models import Q
+        import random
+        from datetime import timedelta
+        
+        query = Q(is_active=True)
+        if packs:
+            query &= Q(category__pack__id__in=packs)
+        if categories:
+            query &= Q(category__id__in=categories)
+            
+        words = list(SecretWord.objects.filter(query))
+        if not words:
+            # Fallback to any active word if strict filters yield nothing
+            words = list(SecretWord.objects.filter(is_active=True))
+            if not words:
+                return None
+                
+        now = timezone.now()
+        weights = []
+        
+        for w in words:
+            # Base weight
+            w_score = float(w.weight)
+            
+            # Popularity boost (slightly increases chance for popular words)
+            w_score += w.popularity * 0.1
+            
+            # Penalty for recently used
+            if w.last_used_at:
+                delta = (now - w.last_used_at).total_seconds()
+                # If used in the last 10 minutes, massively penalize
+                if delta < 600:
+                    w_score *= 0.1
+                # If used in the last hour, penalize
+                elif delta < 3600:
+                    w_score *= 0.5
+                    
+            # Ensure weight is at least slightly positive to remain possible
+            weights.append(max(w_score, 0.1))
+            
+        selected_word = random.choices(words, weights=weights, k=1)[0]
+        
+        # Update usage stats
+        selected_word.last_used_at = now
+        selected_word.popularity += 1
+        selected_word.save(update_fields=['last_used_at', 'popularity'])
+        
+        return selected_word

@@ -120,6 +120,11 @@ class SecretWord(BaseModel):
     difficulty = models.CharField(max_length=20, choices=Difficulty.choices, default=Difficulty.MEDIUM)
     tags = models.JSONField(default=list, blank=True)
     is_active = models.BooleanField(default=True)
+    
+    # Weighted Randomization Fields
+    weight = models.IntegerField(default=10)
+    popularity = models.IntegerField(default=0)
+    last_used_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.english_name

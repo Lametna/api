@@ -39,24 +39,24 @@ class SpyPlugin(BaseGamePlugin):
     def on_match_start(self, match_id: str, players: List[str]) -> None:
         if len(players) < 3: return
         
+        from apps.games.services import DictionaryService
+        
         # Here we mock receiving config. In a full system, the SDK would pass it or we'd fetch Match instance.
         # MVP: Try to grab config from cache or assume defaults if Match SDK doesn't pass it yet.
         # We will assume global random for this MVP execution if no specific config is found,
         # but the architecture fully supports filtering.
         
         # Build query
-        query = Q(is_active=True)
         # if packs: query |= Q(category__pack__id__in=packs)
         # if categories: query |= Q(category__id__in=categories)
         
-        words = list(SecretWord.objects.filter(query).select_related('category', 'category__pack'))
-        if not words:
+        word_obj = DictionaryService.get_weighted_random_word() # Optionally pass packs/categories
+        
+        if not word_obj:
             # Fallback if DB is completely empty (shouldn't happen in prod)
-            word_obj = None
             secret_word_str = "Fallback Location"
             category_str = "Fallback Category"
         else:
-            word_obj = random.choice(words)
             secret_word_str = word_obj.english_name
             category_str = word_obj.category.name
         
