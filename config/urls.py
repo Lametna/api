@@ -22,4 +22,5 @@ urlpatterns = [
     path('api/v1/', include('apps.progression.urls')), # progression/, achievements/ etc
     path('api/v1/', include('apps.economy.urls')), # wallet/, shop/, inventory/
     path('api/v1/', include('apps.competitive.urls')), # leaderboards/, ranking/, seasons/
+    path('api/v1/', include('apps.operations.urls')), # operations/flags/
 ]
