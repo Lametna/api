@@ -87,3 +87,39 @@ class GameResult(BaseModel):
     match = models.OneToOneField(Match, on_delete=models.CASCADE, related_name='result')
     winners = models.ManyToManyField(MatchPlayer, related_name='won_matches')
     summary = models.JSONField(default=dict, blank=True)
+
+# --- Generic Game Content Models (Used by Spy, Charades, etc.) ---
+
+class SecretWordPack(BaseModel):
+    name = models.CharField(max_length=100) # e.g., 'Core Pack', 'Egypt Pack'
+    description = models.TextField(blank=True)
+    is_premium = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+class SecretCategory(BaseModel):
+    pack = models.ForeignKey(SecretWordPack, on_delete=models.CASCADE, related_name='categories')
+    name = models.CharField(max_length=100) # e.g., 'Animals', 'Food'
+    icon = models.CharField(max_length=100, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.pack.name})"
+
+class SecretWord(BaseModel):
+    class Difficulty(models.TextChoices):
+        EASY = 'EASY', 'Easy'
+        MEDIUM = 'MEDIUM', 'Medium'
+        HARD = 'HARD', 'Hard'
+
+    category = models.ForeignKey(SecretCategory, on_delete=models.CASCADE, related_name='words')
+    english_name = models.CharField(max_length=100)
+    arabic_name = models.CharField(max_length=100, blank=True)
+    difficulty = models.CharField(max_length=20, choices=Difficulty.choices, default=Difficulty.MEDIUM)
+    tags = models.JSONField(default=list, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.english_name

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import (
     GameListView, MatchListView, MatchDetailView, MatchActionView, MatchScoresView
 )
@@ -11,4 +11,7 @@ urlpatterns = [
     path('matches/<uuid:pk>/', MatchDetailView.as_view(), name='match_detail'),
     path('matches/<uuid:pk>/<str:action>/', MatchActionView.as_view(), name='match_action'), # handles join, start, pause, finish
     path('matches/<uuid:pk>/scores/', MatchScoresView.as_view(), name='match_scores'),
+    
+    # Plugin specific routes
+    path('plugins/spy/', include('apps.games.plugins.spy.urls')),
 ]
