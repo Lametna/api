@@ -19,4 +19,6 @@ urlpatterns = [
     path('api/v1/parties/', include('apps.party.urls')),
     path('api/v1/communities/', include('apps.communities.urls')),
     path('api/v1/', include('apps.games.urls')), # games/ and matches/ mapped dynamically
+    path('api/v1/', include('apps.progression.urls')), # progression/, achievements/ etc
+    path('api/v1/', include('apps.economy.urls')), # wallet/, shop/, inventory/
 ]

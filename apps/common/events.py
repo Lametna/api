@@ -292,6 +292,49 @@ class StreakUpdatedEvent(BaseDomainEvent):
     streak_type: str
     current_streak: int
 
+# --- Economy Events ---
+@dataclass
+class CoinsGrantedEvent(BaseDomainEvent):
+    player_id: str
+    amount: int
+    reason: str
+
+@dataclass
+class CoinsSpentEvent(BaseDomainEvent):
+    player_id: str
+    amount: int
+    reason: str
+
+@dataclass
+class ItemPurchasedEvent(BaseDomainEvent):
+    player_id: str
+    item_id: str
+    cost: int
+
+@dataclass
+class ItemGrantedEvent(BaseDomainEvent):
+    player_id: str
+    item_id: str
+    source: str
+
+@dataclass
+class ItemEquippedEvent(BaseDomainEvent):
+    player_id: str
+    item_id: str
+    slot_type: str
+
+@dataclass
+class BundlePurchasedEvent(BaseDomainEvent):
+    player_id: str
+    bundle_id: str
+    cost: int
+
+@dataclass
+class InventoryUpdatedEvent(BaseDomainEvent):
+    player_id: str
+    item_id: str
+    quantity: int
+
 # --- Event Dispatcher ---
 class EventDispatcher:
     """
