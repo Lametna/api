@@ -335,6 +335,51 @@ class InventoryUpdatedEvent(BaseDomainEvent):
     item_id: str
     quantity: int
 
+# --- Competitive Events ---
+@dataclass
+class SeasonStartedEvent(BaseDomainEvent):
+    season_id: str
+
+@dataclass
+class SeasonEndedEvent(BaseDomainEvent):
+    season_id: str
+
+@dataclass
+class LeaderboardUpdatedEvent(BaseDomainEvent):
+    leaderboard_id: str
+
+@dataclass
+class PlayerPromotedEvent(BaseDomainEvent):
+    player_id: str
+    new_tier: str
+    game_id: str
+
+@dataclass
+class PlayerDemotedEvent(BaseDomainEvent):
+    player_id: str
+    new_tier: str
+    game_id: str
+
+@dataclass
+class TournamentCreatedEvent(BaseDomainEvent):
+    tournament_id: str
+
+@dataclass
+class TournamentStartedEvent(BaseDomainEvent):
+    tournament_id: str
+
+@dataclass
+class TournamentFinishedEvent(BaseDomainEvent):
+    tournament_id: str
+
+@dataclass
+class LiveEventStartedEvent(BaseDomainEvent):
+    event_id: str
+
+@dataclass
+class LiveEventEndedEvent(BaseDomainEvent):
+    event_id: str
+
 # --- Event Dispatcher ---
 class EventDispatcher:
     """
