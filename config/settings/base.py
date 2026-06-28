@@ -38,7 +38,7 @@ LOCAL_APPS = [
     'apps.authentication',
     'apps.friends',
     'apps.party',
-    'apps.messages',
+    'apps.messaging',
     'apps.notifications',
     'apps.games',
     'apps.communities',
@@ -50,6 +50,10 @@ LOCAL_APPS = [
     'apps.creator',
     'apps.moderation',
     'apps.common',
+    'apps.progression',
+    'apps.economy',
+    'apps.competitive',
+    'apps.operations',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

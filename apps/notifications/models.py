@@ -37,7 +37,7 @@ class Notification(BaseModel):
         ordering = ['-created_at']
 
 class NotificationPreference(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='notification_preferences', primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='notification_preferences')
     
     email_mentions = models.BooleanField(default=True)
     email_messages = models.BooleanField(default=False)

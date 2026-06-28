@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 
 logger = logging.getLogger(__name__)
 
-@dataclass
+@dataclass(kw_only=True)
 class BaseDomainEvent:
     """Base class for all domain events ensuring standardized metadata."""
     event_id: str = field(default_factory=lambda: str(uuid.uuid4()))
