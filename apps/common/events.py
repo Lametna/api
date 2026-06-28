@@ -247,6 +247,51 @@ class WinConditionMetEvent(BaseDomainEvent):
     match_id: str
     winners: list # list of player_ids
 
+# --- Progression & Reward Events ---
+@dataclass
+class PlayerLeveledUpEvent(BaseDomainEvent):
+    player_id: str
+    new_level: int
+    reward_ids: list
+
+@dataclass
+class XPEarnedEvent(BaseDomainEvent):
+    player_id: str
+    amount: int
+    reason: str
+
+@dataclass
+class AchievementUnlockedEvent(BaseDomainEvent):
+    player_id: str
+    achievement_id: str
+
+@dataclass
+class ChallengeCompletedEvent(BaseDomainEvent):
+    player_id: str
+    challenge_id: str
+
+@dataclass
+class RewardGrantedEvent(BaseDomainEvent):
+    player_id: str
+    reward_id: str
+    reward_type: str
+
+@dataclass
+class BadgeUnlockedEvent(BaseDomainEvent):
+    player_id: str
+    badge_id: str
+
+@dataclass
+class TitleUnlockedEvent(BaseDomainEvent):
+    player_id: str
+    title_id: str
+
+@dataclass
+class StreakUpdatedEvent(BaseDomainEvent):
+    player_id: str
+    streak_type: str
+    current_streak: int
+
 # --- Event Dispatcher ---
 class EventDispatcher:
     """
