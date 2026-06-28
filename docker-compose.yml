@@ -1,0 +1,91 @@
+version: '3.8'
+
+x-backend-base: &backend-base
+  build:
+    context: .
+    target: development
+  volumes:
+    - .:/app
+    - media_data:/app/media
+    - static_data:/app/static
+  env_file:
+    - .env
+  depends_on:
+    db:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+
+services:
+  web:
+    <<: *backend-base
+    container_name: lametna-web
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    networks:
+      - lametna-network
+
+  daphne:
+    <<: *backend-base
+    container_name: lametna-daphne
+    command: daphne -b 0.0.0.0 -p 8001 config.asgi:application
+    ports:
+      - "8001:8001"
+    networks:
+      - lametna-network
+
+  celery_worker:
+    <<: *backend-base
+    container_name: lametna-celery-worker
+    command: celery -A config worker -l INFO
+    networks:
+      - lametna-network
+
+  celery_beat:
+    <<: *backend-base
+    container_name: lametna-celery-beat
+    command: celery -A config beat -l INFO
+    networks:
+      - lametna-network
+
+  db:
+    image: postgres:16-alpine
+    container_name: lametna-db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-lametna_db}
+      POSTGRES_USER: ${DB_USER:-lametna_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-lametna_pass}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - lametna-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-lametna_user} -d ${DB_NAME:-lametna_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: lametna-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - lametna-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+networks:
+  lametna-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  media_data:
+  static_data:
